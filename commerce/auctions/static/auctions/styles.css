@@ -3,10 +3,20 @@ body {
 }
 
 img {
-    height: fit-content;
+    width: 450px;
+    height: auto;
 }
 
-div{
-    padding: 20px 0 20px 0;
-    border: 5px solid black;
+#list{
+    margin: 15px 5px 15px 5px;
+    padding: 20px 10px 20px 10px;
+    border: 1px solid gray;
+    display: flex;
 }
+
+#image_container{
+    width: 450px;
+    height: 250px;
+    margin: 0 10px 0 10px;
+}
+
