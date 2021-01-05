@@ -69,16 +69,19 @@ def create(request):
     if request.method == "POST":
         l = Listing(name=request.POST.get("name"),
          start_bid=request.POST.get("start_bid"), 
-         description=request.POST.get("desc"), 
-         image_link=request.POST.get("url"))
+         desc=request.POST.get("desc"), 
+         image=request.POST.get("url"))
         l.save() 
     return render(request, "auctions/create.html")
 
 def item(request, id):
     item = Listing.objects.get(id=id)
     return render(request, "auctions/item.html", {
-        "name" : item.name,
-        "bid" : item.start_bid,
-        "desc" : item.description,
-        "image_url" : item.image_link
+        "item" : item
     })
+
+
+def watchlist(request, id):
+    item = Listing.objects.get(id=id)
+    Watchlist(user=request.user, item=item).save()
+    return HttpResponseRedirect(reverse("index")) #spaceholder

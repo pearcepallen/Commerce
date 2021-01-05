@@ -8,13 +8,13 @@
     <div id="list">
     
         <div id="image_container">
-            <a href = "{% url 'item' listing.id %}"><img id="list_image" src="{{listing.image_link}}" alt="Image of item"></a>
+            <a href = "{% url 'item' listing.id %}"><img id="list_image" src="{{listing.image}}" alt="Image of item"></a>
         </div>
 
         <div>
            <div><h3> <a href = "{% url 'item' listing.id %}">{{ listing.name }} </a></h3></div>
            <div>  Price: ${{ listing.start_bid }} </div>
-            <div>{{ listing.description }}</div>
+            <div>{{ listing.desc }}</div>
         </div>
         
     </div>
