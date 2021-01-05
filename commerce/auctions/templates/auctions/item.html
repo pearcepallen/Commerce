@@ -1,10 +1,13 @@
 {% extends "auctions/layout.html" %}
 
+            
+
 {% block title%} {{name}} {% endblock %}
 {% block body %}
 
     <h2>{{name}}</h2>
-    
+
+    {% if user.is_authenticated %}
     <div>
         <div>
             <img src="{{image_url}}" alt="Image of item">
@@ -15,5 +18,8 @@
             <div> Price: ${{bid}} </div>
         </div>
     </div>
+    {% else %}
+        
+    {% endif %}
 
 {% endblock %}

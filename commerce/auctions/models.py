@@ -18,3 +18,11 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length = 250)
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="current_user")
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.id}: User: {self.user}, Item: {self.item}"
+    class Meta:
+        unique_together = ["user", "item"]
