@@ -6,17 +6,17 @@
 
     {% for listing in listings %}
     <div id="list">
-
+    
         <div id="image_container">
-            <img id="list_image" src="{{listing.image_link}}" alt="Image of item">
+            <a href = "{% url 'item' listing.id %}"><img id="list_image" src="{{listing.image_link}}" alt="Image of item"></a>
         </div>
 
         <div>
-           <div><h3>{{ listing.name }}</h3></div>
-           <div> Price: ${{ listing.start_bid }} </div>
-            <div>{{ listing.description }} </div>
+           <div><h3> <a href = "{% url 'item' listing.id %}">{{ listing.name }} </a></h3></div>
+           <div>  Price: ${{ listing.start_bid }} </div>
+            <div>{{ listing.description }}</div>
         </div>
-
+        
     </div>
     {% endfor %}
 

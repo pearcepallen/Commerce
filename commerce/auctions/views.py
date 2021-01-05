@@ -73,3 +73,12 @@ def create(request):
          image_link=request.POST.get("url"))
         l.save() 
     return render(request, "auctions/create.html")
+
+def item(request, id):
+    item = Listing.objects.get(id=id)
+    return render(request, "auctions/item.html", {
+        "name" : item.name,
+        "bid" : item.start_bid,
+        "desc" : item.description,
+        "image_url" : item.image_link
+    })
