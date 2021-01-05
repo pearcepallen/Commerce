@@ -74,14 +74,22 @@ def create(request):
         l.save() 
     return render(request, "auctions/create.html")
 
-def item(request, id):
-    item = Listing.objects.get(id=id)
-    return render(request, "auctions/item.html", {
-        "item" : item
-    })
+
+def item(request, id): 
+    if Watchlist.objects.filter(user=request.user, item__id=id).exists():
+        return render(request, "auctions/item.html", {
+            "item" : item,
+            "watch": "Remove from Watchlist"
+        })
+    else:
+        return render(request, "auctions/item.html", {
+            "item" : item,
+            "watch": "Add to Watchlist"
+        })
 
 
 def watchlist(request, id):
-    item = Listing.objects.get(id=id)
-    Watchlist(user=request.user, item=item).save()
-    return HttpResponseRedirect(reverse("index")) #spaceholder
+    if Watchlist.objects.filter(user=request.user, item__id=id).exists():
+        Watchlist.objects.filter(user=request.user, item=Listing.objects.get(id=id)).delete()
+    else: 
+        Watchlist(user=request.user, item=Listing.objects.get(id=id)).save()
