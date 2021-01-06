@@ -12,7 +12,13 @@
 
         <div>
             <div>{{ item.desc }} </div>
-            <div> Price: ${{item.start_bid}} </div>
+            <div>
+            {% if bid %}
+                Current Bid: ${{bid.bid}} 
+            {% else %}
+                Current Bid: ${{item.start_bid}} 
+            {% endif %}
+            </div>
         </div>
     </div>
     {% if user.is_authenticated %}

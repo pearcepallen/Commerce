@@ -81,18 +81,35 @@ def create(request):
 
 def item(request, id): 
     item = Listing.objects.get(id=id)
-    if Watchlist.objects.filter(user=request.user, item__id=id).exists():
-        return render(request, "auctions/item.html", {
-            "item" : item,
-            "watch": "Remove from Watchlist",
-            "form": BidForm()
-        })
+    if Bid.objects.filter(item=item).exists():
+        bid = Bid.objects.filter(item=item).last()
+        if Watchlist.objects.filter(user=request.user, item__id=id).exists():
+            return render(request, "auctions/item.html", {
+                "item" : item,
+                "bid": bid,
+                "watch": "Remove from Watchlist",
+                "form": BidForm()
+            })
+        else:
+            return render(request, "auctions/item.html", {
+                "item" : item,
+                "bid": bid,
+                "watch": "Add to Watchlist",
+                "form": BidForm()
+            })
     else:
-        return render(request, "auctions/item.html", {
-            "item" : item,
-            "watch": "Add to Watchlist",
-            "form": BidForm()
-        })
+        if Watchlist.objects.filter(user=request.user, item__id=id).exists():
+            return render(request, "auctions/item.html", {
+                "item" : item,
+                "watch": "Remove from Watchlist",
+                "form": BidForm()
+            })
+        else:
+            return render(request, "auctions/item.html", {
+                "item" : item,
+                "watch": "Add to Watchlist",
+                "form": BidForm()
+            })
 
 
 def watchlist(request, id): #Add a html/response for when it is successfully added
@@ -111,12 +128,18 @@ def bid(request, id): #Add proper front end response
             new_bid = form.cleaned_data["bid"]
 
             item=Listing.objects.get(id=id)
-            if new_bid >= item.start_bid or new_bid > Bid.objects.all().last().bid:
-                Bid(bid=new_bid, user=request.user, item=item).save()
-                return HttpResponse("Success")
+            if Bid.objects.filter(item=item).exists():
+                if new_bid > Bid.objects.filter(item=item).last().bid:
+                    Bid(bid=new_bid, user=request.user, item=item).save()
+                    return HttpResponse("Success, larger than current bid")
+                else:
+                    return HttpResponse("Failer, smaller/equal current bid")
             else:
-                return HttpResponse("Failure")
-
+                if new_bid >= item.start_bid :
+                    Bid(bid=new_bid, user=request.user, item=item).save()
+                    return HttpResponse("Success, larger than start bid")
+                else:
+                    return HttpResponse("Failure, smaller than start bid")
     else:
         return HttpResponse("Nothing happened")
 
