@@ -15,6 +15,8 @@ class Listing(models.Model):
 
 class Bid(models.Model):
     bid = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
 class Comment(models.Model):
     comment = models.CharField(max_length = 250)

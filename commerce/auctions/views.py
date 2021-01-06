@@ -3,8 +3,12 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
 
 from .models import *
+
+class BidForm(forms.Form):
+    bid = forms.IntegerField(label=False, widget=forms.NumberInput(attrs={"placeholder": "Bid"}))
 
 
 def index(request):
@@ -80,12 +84,14 @@ def item(request, id):
     if Watchlist.objects.filter(user=request.user, item__id=id).exists():
         return render(request, "auctions/item.html", {
             "item" : item,
-            "watch": "Remove from Watchlist"
+            "watch": "Remove from Watchlist",
+            "form": BidForm()
         })
     else:
         return render(request, "auctions/item.html", {
             "item" : item,
-            "watch": "Add to Watchlist"
+            "watch": "Add to Watchlist",
+            "form": BidForm()
         })
 
 
@@ -94,3 +100,11 @@ def watchlist(request, id): #Add a html/response for when it is successfully add
         Watchlist.objects.filter(user=request.user, item=Listing.objects.get(id=id)).delete()
     else: 
         Watchlist(user=request.user, item=Listing.objects.get(id=id)).save()
+
+
+def bid(request):
+    if request.method == "POST":
+        form = BidForm(request.POST)
+
+        if form.is_valid():
+            new_bid = form.cleaned_data["bid"]
