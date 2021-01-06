@@ -76,6 +76,7 @@ def create(request):
 
 
 def item(request, id): 
+    item = Listing.objects.get(id=id)
     if Watchlist.objects.filter(user=request.user, item__id=id).exists():
         return render(request, "auctions/item.html", {
             "item" : item,
@@ -88,7 +89,7 @@ def item(request, id):
         })
 
 
-def watchlist(request, id):
+def watchlist(request, id): #Add a html/response for when it is successfully added
     if Watchlist.objects.filter(user=request.user, item__id=id).exists():
         Watchlist.objects.filter(user=request.user, item=Listing.objects.get(id=id)).delete()
     else: 
