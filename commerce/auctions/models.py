@@ -10,6 +10,7 @@ class Listing(models.Model):
     start_bid = models.IntegerField()
     desc = models.CharField(max_length = 100)
     image = models.CharField(max_length = 2000)
+    active = models.BooleanField(default = True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_listing") #user that created listing
     def __str__(self):
         return f"{self.id}: Name:{self.name}, Bid:{self.start_bid}, Desc:{self.desc}"

@@ -13,7 +13,7 @@ class BidForm(forms.Form):
 
 def index(request):
     return render(request, "auctions/index.html",{
-        "listings": Listing.objects.all()
+        "listings": Listing.objects.filter(active=True)
     })
 
 
@@ -82,10 +82,12 @@ def create(request):
 
 def item(request, id): 
     item = Listing.objects.get(id=id)
+    user = request.user
     if Bid.objects.filter(item=item).exists():
         bid = Bid.objects.filter(item=item).last()
         if Watchlist.objects.filter(user=request.user, item__id=id).exists():
             return render(request, "auctions/item.html", {
+                "curr_user": user, 
                 "item" : item,
                 "bid": bid,
                 "watch": "Remove from Watchlist",
@@ -93,6 +95,7 @@ def item(request, id):
             })
         else:
             return render(request, "auctions/item.html", {
+                "curr_user": user, 
                 "item" : item,
                 "bid": bid,
                 "watch": "Add to Watchlist",
@@ -101,12 +104,14 @@ def item(request, id):
     else:
         if Watchlist.objects.filter(user=request.user, item__id=id).exists():
             return render(request, "auctions/item.html", {
+                "curr_user": user, 
                 "item" : item,
                 "watch": "Remove from Watchlist",
                 "form": BidForm()
             })
         else:
             return render(request, "auctions/item.html", {
+                "curr_user": user, 
                 "item" : item,
                 "watch": "Add to Watchlist",
                 "form": BidForm()
@@ -143,4 +148,11 @@ def bid(request, id): #Add proper front end response
                     return HttpResponse("Failure, smaller than start bid")
     else:
         return HttpResponse("Nothing happened")
+
+
+def close(request, id):
+    item = Listing.objects.get(id=id)
+    item.active = False
+    item.save()
+    return(HttpResponseRedirect(reverse("index")))
 

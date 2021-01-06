@@ -2,9 +2,12 @@
 
 {% block title%} {{item.name}} {% endblock %}
 {% block body %}
-
     <h2>{{item.name}}</h2>
-
+    {% if user.is_authenticated and curr_user == item.user%}
+        <div>
+           <a href="{% url 'close' item.id %}" > <button type="button">Close Listing </button> </a>
+        </div>
+    {% endif %}
     <div>
         <div>
             <img src="{{item.image}}" alt="Image of item">
@@ -28,10 +31,7 @@
         {% csrf_token %}
         {{form}}
         <input type="submit" value="Place Bid">
-    </form>
-
-    {% else %}
-        
+    </form>    
     {% endif %}
 
 {% endblock %}
