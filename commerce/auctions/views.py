@@ -152,10 +152,10 @@ def bid(request, id): #Add proper front end response
 
 def close(request, id):
     item = Listing.objects.get(id=id)
-    end_bid = Bid.objects.filter(item=item),last().bid()
-
     item.active = False
     item.save()
-    
+
+    end_bid = Bid.objects.filter(item=item).last()
+    Winner(bid=end_bid).save()
     return(HttpResponseRedirect(reverse("index")))
 
