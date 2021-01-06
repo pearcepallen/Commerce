@@ -98,13 +98,25 @@ def item(request, id):
 def watchlist(request, id): #Add a html/response for when it is successfully added
     if Watchlist.objects.filter(user=request.user, item__id=id).exists():
         Watchlist.objects.filter(user=request.user, item=Listing.objects.get(id=id)).delete()
+        return HttpResponse("Success")
     else: 
         Watchlist(user=request.user, item=Listing.objects.get(id=id)).save()
+        return HttpResponse("Success")
 
 
-def bid(request):
+def bid(request, id): #Add proper front end response
     if request.method == "POST":
         form = BidForm(request.POST)
-
         if form.is_valid():
             new_bid = form.cleaned_data["bid"]
+
+            item=Listing.objects.get(id=id)
+            if new_bid >= item.start_bid or new_bid > Bid.objects.all().last().bid:
+                Bid(bid=new_bid, user=request.user, item=item).save()
+                return HttpResponse("Success")
+            else:
+                return HttpResponse("Failure")
+
+    else:
+        return HttpResponse("Nothing happened")
+

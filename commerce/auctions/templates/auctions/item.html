@@ -18,11 +18,12 @@
     {% if user.is_authenticated %}
     <a href = "{% url 'watchlist' item.id %}"><button type="button">{{watch}}</button></a>
 
-    <form action="{% url 'bid' %}" method="POST">
+    <form action="{% url 'bid' item.id %}" method="POST">
         {% csrf_token %}
         {{form}}
         <input type="submit" value="Place Bid">
     </form>
+
     {% else %}
         
     {% endif %}
