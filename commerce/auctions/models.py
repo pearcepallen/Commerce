@@ -30,3 +30,6 @@ class Watchlist(models.Model):
         return f"{self.id}: User: {self.user}, Item: {self.item}"
     class Meta:
         unique_together = ["user", "item"]
+
+class Winner(models.Model):
+    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name="winning_bid")
