@@ -74,7 +74,8 @@ def create(request):
         l = Listing(name=request.POST.get("name"),
          start_bid=request.POST.get("start_bid"), 
          desc=request.POST.get("desc"), 
-         image=request.POST.get("url"))
+         image=request.POST.get("url"),
+         user=request.user)
         l.save() 
     return render(request, "auctions/create.html")
 
