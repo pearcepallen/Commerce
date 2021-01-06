@@ -19,6 +19,8 @@ class Bid(models.Model):
     bid = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.id}: Bid: {self.bid} | User:{self.user} |Item:{self.item}"
 
 class Comment(models.Model):
     comment = models.CharField(max_length = 250)
@@ -33,3 +35,5 @@ class Watchlist(models.Model):
 
 class Winner(models.Model):
     bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name="winning_bid")
+    def __str__(self):
+        return f"{self.id}: Bid: {self.bid}"
