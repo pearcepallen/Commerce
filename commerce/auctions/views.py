@@ -203,7 +203,7 @@ def categories(request):
 
 def category(request, category):
     item = Category.objects.get(category=category)
-    category_items = item.item_category.all()
+    category_items = item.item_category.filter(active=True)
     return render(request, "auctions/category.html", {
         "category_items": category_items,
         "category": category

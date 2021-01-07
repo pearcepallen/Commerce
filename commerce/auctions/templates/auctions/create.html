@@ -15,7 +15,7 @@
         <input type="text" name="url" placeholder="Enter image url">
         <select name="category">
             {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.item_category }}</option>
+                <option value="{{ category.id }}">{{ category.category }}</option>
             {% endfor %}
         </select>
         <input type="submit"> 
