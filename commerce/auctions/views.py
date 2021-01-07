@@ -10,6 +10,9 @@ from .models import *
 class BidForm(forms.Form):
     bid = forms.IntegerField(label=False, widget=forms.NumberInput(attrs={"placeholder": "Bid"}))
 
+class CommentForm(forms.Form):
+    comment = forms.CharField(label=False, widget=forms.TextInput(attrs={"placeholder": "Write a comment"}))
+
 
 def index(request):
     return render(request, "auctions/index.html",{
@@ -83,6 +86,7 @@ def create(request):
 def item(request, id): 
     item = Listing.objects.get(id=id)
     user = request.user
+    comments = Comment.objects.filter(item__id = id)
     if Bid.objects.filter(item=item).exists():
         bid = Bid.objects.filter(item=item).last()
         if Watchlist.objects.filter(user=request.user, item__id=id).exists():
@@ -91,7 +95,9 @@ def item(request, id):
                 "item" : item,
                 "bid": bid,
                 "watch": "Remove from Watchlist",
-                "form": BidForm()
+                "comments": comments,
+                "form": BidForm(),
+                "comment_form": CommentForm()
             })
         else:
             return render(request, "auctions/item.html", {
@@ -99,7 +105,9 @@ def item(request, id):
                 "item" : item,
                 "bid": bid,
                 "watch": "Add to Watchlist",
-                "form": BidForm()
+                "comments": comments,
+                "form": BidForm(),
+                "comment_form": CommentForm()
             })
     else:
         if Watchlist.objects.filter(user=request.user, item__id=id).exists():
@@ -107,14 +115,18 @@ def item(request, id):
                 "curr_user": user, 
                 "item" : item,
                 "watch": "Remove from Watchlist",
-                "form": BidForm()
+                "comments": comments,
+                "form": BidForm(),
+                "comment_form": CommentForm()
             })
         else:
             return render(request, "auctions/item.html", {
                 "curr_user": user, 
                 "item" : item,
                 "watch": "Add to Watchlist",
-                "form": BidForm()
+                "comments": comments,
+                "form": BidForm(),
+                "comment_form": CommentForm()
             })
 
 
@@ -154,8 +166,20 @@ def close(request, id):
     item = Listing.objects.get(id=id)
     item.active = False
     item.save()
-
     end_bid = Bid.objects.filter(item=item).last()
     Winner(bid=end_bid).save()
     return(HttpResponseRedirect(reverse("index")))
 
+def comment(request, id):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.cleaned_data["comment"]
+            item = Listing.objects.get(id=id)
+            Comment(comment=new_comment, user=request.user, item=item).save()
+            return HttpResponseRedirect(reverse("item", args=[id]))
+    else:
+        return HttpResponseRedirect(reverse("item", args=[id]))
+
+def watching(request):
+    pass

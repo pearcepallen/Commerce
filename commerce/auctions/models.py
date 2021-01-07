@@ -24,6 +24,8 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length = 250)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watch")
