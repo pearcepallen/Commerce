@@ -194,3 +194,17 @@ def watching(request):
     return render(request, "auctions/watchlist.html", {
         "watch_items": watch_items
     })
+
+def categories(request):
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+def category(request, category):
+    item = Category.objects.get(category=category)
+    category_items = item.item_category.all()
+    return render(request, "auctions/category.html", {
+        "category_items": category_items,
+        "category": category
+    })

@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>{{category}}</h2>
+
+    {% for category_item in category_items %}
+    <div id="list">
+    
+        <div id="image_container">
+            <a href = "{% url 'item' category_item.id %}"><img id="list_image" src="{{category_item.image}}" alt="Image of item"></a>
+        </div>
+
+        <div>
+           <div><h3> <a href = "{% url 'item' category_item.id %}">{{ category_item.name }} </a></h3></div>
+           <div> Price: ${{ category_item.start_bid }} </div>
+            <div>{{ category_item.desc }}</div>
+        </div>
+        
+    </div>
+    {% endfor %}
+
+{% endblock %}

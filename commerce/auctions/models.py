@@ -6,9 +6,9 @@ class User(AbstractUser):
     pass
 
 class Category(models.Model):
-    item_category = models.CharField(max_length=60, unique=True)
+    category = models.CharField(max_length=60, unique=True)
     def __str__(self):
-        return f"{self.id}: {self.item_category}"
+        return f"{self.id}: {self.category}"
 
 class Listing(models.Model):
     name = models.CharField(max_length = 50)
@@ -17,7 +17,7 @@ class Listing(models.Model):
     image = models.CharField(max_length = 2000)
     active = models.BooleanField(default = True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_listing") #user that created listing
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="item_category")
     def __str__(self):
         return f"{self.id}: Name:{self.name}, Bid:{self.start_bid}, Desc:{self.desc}"
 
