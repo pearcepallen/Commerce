@@ -121,10 +121,10 @@ def item(request, id):
 def watchlist(request, id): #Add a html/response for when it is successfully added
     if Watchlist.objects.filter(user=request.user, item__id=id).exists():
         Watchlist.objects.filter(user=request.user, item=Listing.objects.get(id=id)).delete()
-        return HttpResponse("Success")
+        return HttpResponseRedirect(reverse("item", args=[id]))
     else: 
         Watchlist(user=request.user, item=Listing.objects.get(id=id)).save()
-        return HttpResponse("Success")
+        return HttpResponseRedirect(reverse("item", args=[id]))
 
 
 def bid(request, id): #Add proper front end response
