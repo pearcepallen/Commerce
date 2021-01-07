@@ -74,13 +74,21 @@ def register(request):
 
 def create(request):
     if request.method == "POST":
+        cat_id = request.POST.get("category")
+        category = Category.objects.get(id = cat_id)
+
         l = Listing(name=request.POST.get("name"),
          start_bid=request.POST.get("start_bid"), 
          desc=request.POST.get("desc"), 
          image=request.POST.get("url"),
-         user=request.user)
+         user=request.user,
+         category=category)
         l.save() 
-    return render(request, "auctions/create.html")
+    
+    categories = Category.objects.all()
+    return render(request, "auctions/create.html", {
+        "categories": categories
+    })
 
 
 def item(request, id): 
