@@ -28,8 +28,8 @@ class Comment(models.Model):
     item = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watch")
-    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watchlist")
     def __str__(self):
         return f"{self.id}: User: {self.user}, Item: {self.item}"
     class Meta:

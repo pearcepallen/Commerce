@@ -182,4 +182,7 @@ def comment(request, id):
         return HttpResponseRedirect(reverse("item", args=[id]))
 
 def watching(request):
-    pass
+    watch_items = Watchlist.objects.filter(user=request.user)
+    return render(request, "auctions/watchlist.html", {
+        "watch_items": watch_items
+    })
