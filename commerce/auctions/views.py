@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib import messages
 from django import forms
 
 from .models import *
@@ -15,8 +16,14 @@ class CommentForm(forms.Form):
 
 
 def index(request):
+    listings = Listing.objects.filter(active=True)
+    curr_bids = []
+    for listing in listings:
+        curr_bids.append(listing.item_bid.last())
+        
+    mylist = zip(listings, curr_bids)
     return render(request, "auctions/index.html",{
-        "listings": Listing.objects.filter(active=True)
+        "listings": mylist
     })
 
 
@@ -157,17 +164,21 @@ def bid(request, id): #Add proper front end response
             if Bid.objects.filter(item=item).exists():
                 if new_bid > Bid.objects.filter(item=item).last().bid:
                     Bid(bid=new_bid, user=request.user, item=item).save()
-                    return HttpResponse("Success, larger than current bid")
+                    messages.success(request, "Bid was placed successfully")
+                    return HttpResponseRedirect(reverse("item",args=[id]))
                 else:
-                    return HttpResponse("Failer, smaller/equal current bid")
+                    messages.error(request, "Bid much be larger than current bid")
+                    return HttpResponseRedirect(reverse("item",args=[id]))
             else:
                 if new_bid >= item.start_bid :
                     Bid(bid=new_bid, user=request.user, item=item).save()
-                    return HttpResponse("Success, larger than start bid")
+                    messages.success(request, "Bid was placed successfully")
+                    return HttpResponseRedirect(reverse("item",args=[id]))
                 else:
-                    return HttpResponse("Failure, smaller than start bid")
+                    messages.error(request, "Bid much be larger than or equal to starting bid")
+                    return HttpResponseRedirect(reverse("item",args=[id]))
     else:
-        return HttpResponse("Nothing happened")
+        return HttpResponseRedirect(reverse("item",args=[id]))
 
 
 def close(request, id):

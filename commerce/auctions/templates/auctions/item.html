@@ -3,7 +3,14 @@
 {% block title%} {{item.name}} {% endblock %}
 {% block body %}
     <h2>{{item.name}}</h2>
-        
+
+    {% if messages %}       <!-- error/success message(needs styling)-->
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     
     {% if item.active == True %}
         {% if user.is_authenticated and curr_user == item.user and item.active == True %}

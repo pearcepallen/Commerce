@@ -24,7 +24,7 @@ class Listing(models.Model):
 class Bid(models.Model):
     bid = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_bid")
     def __str__(self):
         return f"{self.id}: Bid: {self.bid} | User:{self.user} |Item:{self.item}"
 

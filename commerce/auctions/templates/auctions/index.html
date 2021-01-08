@@ -3,8 +3,7 @@
 {% block body %}
 
     <h2>Active Listings</h2>
-
-    {% for listing in listings %}
+    {% for listing, curr_bid in listings %}
     <div id="list">
     
         <div id="image_container">
@@ -13,7 +12,13 @@
 
         <div>
            <div><h3> <a href = "{% url 'item' listing.id %}">{{ listing.name }} </a></h3></div>
-           <div> Price: ${{ listing.start_bid }} </div>
+           <div> 
+            {% if curr_bid%}
+                Current Bid: ${{ curr_bid.bid }} 
+            {% else %}
+                Starting Bid: ${{ listing.start_bid }}
+            {% endif %}
+             </div>
             <div>{{ listing.desc }}</div>
         </div>
         
