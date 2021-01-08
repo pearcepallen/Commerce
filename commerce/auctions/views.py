@@ -171,7 +171,7 @@ def close(request, id):
     item = Listing.objects.get(id=id)
     item.active = False
     item.save()
-    if Bid.objects.filter(item=item).exists:
+    if Bid.objects.filter(item=item).exists():
         end_bid = Bid.objects.filter(item=item).last()
         Winner(bid=end_bid).save()
     return(HttpResponseRedirect(reverse("item", args=[id])))
