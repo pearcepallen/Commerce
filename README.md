@@ -1,3 +1,3 @@
 # Commerce
 
-Django commerce web application using models and SQLite.
+Django commerce web application using SQLite.
