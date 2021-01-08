@@ -3,6 +3,9 @@
 {% block body %}
 
     <h2>Watchlist</h2>
+    {% if not watch_items %}
+    <h4>There are currently no items on your watchlist.</h4>
+    {% endif %}
       
     {% for watch_item in watch_items %}
     <div id="list">

@@ -83,15 +83,13 @@ def create(request):
     if request.method == "POST":
         cat_id = request.POST.get("category")
         category = Category.objects.get(id = cat_id)
+        Listing(name=request.POST.get("name"),
+        start_bid=request.POST.get("start_bid"), 
+        desc=request.POST.get("desc"), 
+        image=request.POST.get("url"),
+        user=request.user,
+        category=category).save() 
 
-        l = Listing(name=request.POST.get("name"),
-         start_bid=request.POST.get("start_bid"), 
-         desc=request.POST.get("desc"), 
-         image=request.POST.get("url"),
-         user=request.user,
-         category=category)
-        l.save() 
-    
     categories = Category.objects.all()
     return render(request, "auctions/create.html", {
         "categories": categories
@@ -100,52 +98,40 @@ def create(request):
 
 def item(request, id): 
     item = Listing.objects.get(id=id)
-    user = request.user
     comments = Comment.objects.filter(item__id = id)
-    if Bid.objects.filter(item=item).exists():
+    
+    if Bid.objects.filter(item=item).exists(): 
         bid = Bid.objects.filter(item=item).last()
-        if Watchlist.objects.filter(user=request.user, item__id=id).exists():
-            return render(request, "auctions/item.html", {
-                "curr_user": user, 
-                "item" : item,
-                "bid": bid,
-                "watch": "Remove from Watchlist",
-                "comments": comments,
-                "form": BidForm(),
-                "comment_form": CommentForm()
-            })
-        else:
-            return render(request, "auctions/item.html", {
-                "curr_user": user, 
-                "item" : item,
-                "bid": bid,
-                "watch": "Add to Watchlist",
-                "comments": comments,
-                "form": BidForm(),
-                "comment_form": CommentForm()
-            })
     else:
-        if Watchlist.objects.filter(user=request.user, item__id=id).exists():
-            return render(request, "auctions/item.html", {
-                "curr_user": user, 
-                "item" : item,
-                "watch": "Remove from Watchlist",
-                "comments": comments,
-                "form": BidForm(),
-                "comment_form": CommentForm()
-            })
-        else:
-            return render(request, "auctions/item.html", {
-                "curr_user": user, 
-                "item" : item,
-                "watch": "Add to Watchlist",
-                "comments": comments,
-                "form": BidForm(),
-                "comment_form": CommentForm()
-            })
+        bid = None
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        user = None
+    
+    if Watchlist.objects.filter(user=user, item__id=id).exists():
+        return render(request, "auctions/item.html", {
+            "curr_user": user, 
+            "item" : item,
+            "bid": bid,
+            "watch": "Remove from Watchlist",
+            "comments": comments,
+            "form": BidForm(),
+            "comment_form": CommentForm()
+        })
+    else:
+        return render(request, "auctions/item.html", {
+            "curr_user": user, 
+            "item" : item,
+            "bid": bid,
+            "watch": "Add to Watchlist",
+            "comments": comments,
+            "form": BidForm(),
+            "comment_form": CommentForm()
+        })
 
 
-def watchlist(request, id): #Add a html/response for when it is successfully added
+def watchlist(request, id): #Button indicates success/failure
     if Watchlist.objects.filter(user=request.user, item__id=id).exists():
         Watchlist.objects.filter(user=request.user, item=Listing.objects.get(id=id)).delete()
         return HttpResponseRedirect(reverse("item", args=[id]))
@@ -154,7 +140,7 @@ def watchlist(request, id): #Add a html/response for when it is successfully add
         return HttpResponseRedirect(reverse("item", args=[id]))
 
 
-def bid(request, id): #Add proper front end response
+def bid(request, id): 
     if request.method == "POST":
         form = BidForm(request.POST)
         if form.is_valid():
@@ -185,9 +171,11 @@ def close(request, id):
     item = Listing.objects.get(id=id)
     item.active = False
     item.save()
-    end_bid = Bid.objects.filter(item=item).last()
-    Winner(bid=end_bid).save()
-    return(HttpResponseRedirect(reverse("index")))
+    if Bid.objects.filter(item=item).exists:
+        end_bid = Bid.objects.filter(item=item).last()
+        Winner(bid=end_bid).save()
+    return(HttpResponseRedirect(reverse("item", args=[id])))
+
 
 def comment(request, id):
     if request.method == "POST":
@@ -200,17 +188,20 @@ def comment(request, id):
     else:
         return HttpResponseRedirect(reverse("item", args=[id]))
 
+
 def watching(request):
     watch_items = Watchlist.objects.filter(user=request.user)
     return render(request, "auctions/watchlist.html", {
         "watch_items": watch_items
     })
 
+
 def categories(request):
     categories = Category.objects.all()
     return render(request, "auctions/categories.html", {
         "categories": categories
     })
+
 
 def category(request, category):
     item = Category.objects.get(category=category)

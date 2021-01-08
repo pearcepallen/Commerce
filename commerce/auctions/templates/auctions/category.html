@@ -3,6 +3,9 @@
 {% block body %}
 
     <h2>{{category}}</h2>
+    {% if not category_items %}
+    <h4>No active listings</h4>
+    {% endif %}
 
     {% for category_item in category_items %}
     <div id="list">
