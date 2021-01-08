@@ -9,11 +9,11 @@
     
     <form action="{% url 'create' %}" method="POST">
         {% csrf_token %}
-        <input type="text" name="name" placeholder="Enter name of item">
-        <input type="number" name="start_bid" placeholder="Enter start bid of item">
-        <input type="text" name="desc" placeholder="Enter item description">
-        <input type="text" name="url" placeholder="Enter image url">
-        <select name="category">
+        <input type="text" name="name" placeholder="Enter name of item"  required>
+        <input type="number" name="start_bid" placeholder="Enter start bid of item"  required>
+        <input type="text" name="desc" placeholder="Enter item description"  required>
+        <input type="text" name="url" placeholder="Enter image url"  required>
+        <select name="category"  required>
             {% for category in categories %}
                 <option value="{{ category.id }}">{{ category.category }}</option>
             {% endfor %}
