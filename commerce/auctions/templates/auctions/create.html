@@ -5,19 +5,29 @@
 {%endblock%}
 
 {% block body %}
-    <h2>Create Page</h2>
+    <h2>Create Listing</h2>
     
-    <form action="{% url 'create' %}" method="POST">
+    <form action="{% url 'create' %}" method="POST" id="create">
         {% csrf_token %}
-        <input type="text" name="name" placeholder="Enter name of item"  required>
-        <input type="number" name="start_bid" placeholder="Enter start bid of item"  required>
-        <input type="text" name="desc" placeholder="Enter item description"  required>
-        <input type="text" name="url" placeholder="Enter image url"  required>
-        <select name="category"  required>
+        <label for="name">Item Name</label>
+        <input type="text" name="name" id="name" placeholder="Enter name of item"  required>
+
+        <label for="start_bid">Item Starting Bid</label>
+        <input type="number" name="start_bid" id="start_bid" placeholder="Enter start bid of item"  required>
+
+        <label for="url">Item Image URL </label>
+        <input type="text" name="url" id="url" placeholder="Enter image url"  required>
+
+        <label for="desc">Item Description</label>
+        <textarea name="desc" id="desc">Enter item description here...</textarea> 
+
+        <label for="category">Item Category</label>
+        <select name="category" id="category"  required>
             {% for category in categories %}
                 <option value="{{ category.id }}">{{ category.category }}</option>
             {% endfor %}
         </select>
         <input type="submit"> 
     </form>
+
 {% endblock %}
