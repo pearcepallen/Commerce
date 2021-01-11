@@ -22,8 +22,24 @@ body {
     max-width: 100%;
 }
 
-input{
+#create{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+input, select{
     width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+}
+
+textarea{
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    height: auto;
+    resize: none;
 }
 
 
