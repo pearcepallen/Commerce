@@ -13,7 +13,7 @@
     {% endif %}
     
     <div id="item">
-        
+
         {% if item.active == True %}
             {% if user.is_authenticated and curr_user == item.user and item.active == True %}
                 <div>
@@ -51,13 +51,21 @@
             {% csrf_token %}
             {{form}}
             <input type="submit" value="Place Bid">
-        </form>    
+        </form>      
+        {% endif %}
 
+        <h4>Details</h4>
+        <ul>
+            <li> Listed by: {{item.user.username}} </li>
+            <li> Category: {{item.category.category}} </li>
+        </ul>
+
+        {% if user.is_authenticated %}
         <form action="{% url 'comment' item.id %}" method="POST">
             {% csrf_token %}
             {{comment_form}}
             <input type="submit" value="Post Comment">
-        </form>    
+        </form>  
         {% endif %}
 
         <h4>Comments</h4>

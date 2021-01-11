@@ -46,12 +46,13 @@ body {
 .bid{
     width: 100%;
     padding: 12px 20px;
-    margin-bottom: 10px;
+    margin: 10px 0 10px 0;
 }
 
 .comment{
     width: 100%;
     resize: none;
+    margin: 10px 0 10px 0;
 }
 
 
