@@ -12,57 +12,60 @@
     </ul>
     {% endif %}
     
-    {% if item.active == True %}
-        {% if user.is_authenticated and curr_user == item.user and item.active == True %}
-            <div>
-            <a href="{% url 'close' item.id %}" > <button type="button">Close Listing </button> </a>
-            </div>
-        {% endif %}
-    {% else %}
-        <h3>Closed</h3>
-        {% if curr_user == bid.user %}
-            <h3>You are the winner!!!!</h3>
-        {% endif %}
-    {% endif %}
-    
-    <div>
-        <div>
-            <img src="{{item.image}}" alt="Image of item">
-        </div>
-
-        <div>
-            <div>{{ item.desc }} </div>
-            <div>
-            {% if bid %}
-                Current Bid: ${{bid.bid}} 
-            {% else %}
-                Starting Bid: ${{item.start_bid}} 
+    <div id="item">
+        
+        {% if item.active == True %}
+            {% if user.is_authenticated and curr_user == item.user and item.active == True %}
+                <div>
+                <a href="{% url 'close' item.id %}" > <button type="button">Close Listing </button> </a>
+                </div>
             {% endif %}
+        {% else %}
+            <h3>Closed</h3>
+            {% if curr_user == bid.user %}
+                <h3>You are the winner!!!!</h3>
+            {% endif %}
+        {% endif %}
+        
+        <div>
+            <div>
+                <img src="{{item.image}}" alt="Image of item">
+            </div>
+
+            <div>
+                <div>{{ item.desc }} </div>
+                <div>
+                {% if bid %}
+                    Current Bid: ${{bid.bid}} 
+                {% else %}
+                    Starting Bid: ${{item.start_bid}} 
+                {% endif %}
+                </div>
             </div>
         </div>
+
+        {% if user.is_authenticated %}
+        <a href = "{% url 'watchlist' item.id %}"><button type="button">{{watch}}</button></a>
+
+        <form action="{% url 'bid' item.id %}" method="POST">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit" value="Place Bid">
+        </form>    
+
+        <form action="{% url 'comment' item.id %}" method="POST">
+            {% csrf_token %}
+            {{comment_form}}
+            <input type="submit" value="Post Comment">
+        </form>    
+        {% endif %}
+
+        <h4>Comments</h4>
+        {% for comment in comments %}
+            <div>
+                <p>{{comment.comment}}</p>
+            </div>
+        {% endfor %}
+
     </div>
-
-    {% if user.is_authenticated %}
-    <a href = "{% url 'watchlist' item.id %}"><button type="button">{{watch}}</button></a>
-
-    <form action="{% url 'bid' item.id %}" method="POST">
-        {% csrf_token %}
-        {{form}}
-        <input type="submit" value="Place Bid">
-    </form>    
-
-    <form action="{% url 'comment' item.id %}" method="POST">
-        {% csrf_token %}
-        {{comment_form}}
-        <input type="submit" value="Post Comment">
-    </form>    
-    {% endif %}
-
-    <h4>Comments</h4>
-    {% for comment in comments %}
-        <div>
-            <p>{{comment.comment}}</p>
-        </div>
-    {% endfor %}
-
 {% endblock %}

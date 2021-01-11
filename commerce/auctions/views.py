@@ -10,10 +10,10 @@ from django import forms
 from .models import *
 
 class BidForm(forms.Form):
-    bid = forms.IntegerField(label=False, widget=forms.NumberInput(attrs={"placeholder": "Bid"}))
+    bid = forms.IntegerField(label=False, widget=forms.NumberInput(attrs={"placeholder": "Bid", "class":"bid"}))
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(label=False, widget=forms.TextInput(attrs={"placeholder": "Write a comment"}))
+    comment = forms.CharField(label=False, widget=forms.Textarea(attrs={"placeholder": "Write a comment", "rows":5, "class":"comment"}))
 
 
 def index(request):

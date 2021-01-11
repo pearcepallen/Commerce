@@ -28,17 +28,29 @@ body {
     padding: 20px;
 }
 
-input, select{
+#create input, #create select{
     width: 100%;
     padding: 12px 20px;
     margin-bottom: 10px;
 }
 
-textarea{
+#create textarea{
     width: 100%;
     padding: 12px 20px;
     margin-bottom: 10px;
     height: auto;
+    resize: none;
+}
+
+
+.bid{
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+}
+
+.comment{
+    width: 100%;
     resize: none;
 }
 
