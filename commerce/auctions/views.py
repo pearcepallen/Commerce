@@ -13,7 +13,7 @@ class BidForm(forms.Form):
     bid = forms.IntegerField(label=False, widget=forms.NumberInput(attrs={"placeholder": "Bid", "class":"bid"}))
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(label=False, widget=forms.Textarea(attrs={"placeholder": "Write a comment", "rows":5, "class":"comment"}))
+    comment = forms.CharField(label=False, widget=forms.Textarea(attrs={"placeholder": "Leave a comment about listing", "rows":5, "class":"comment"}))
 
 
 def index(request):
@@ -103,7 +103,7 @@ def create(request):
 def item(request, id): 
     item = Listing.objects.get(id=id)
     comments = Comment.objects.filter(item__id = id)
-    
+
     if Bid.objects.filter(item=item).exists(): 
         bid = Bid.objects.filter(item=item).last()
     else:

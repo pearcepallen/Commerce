@@ -16,8 +16,8 @@
 
         {% if item.active == True %}
             {% if user.is_authenticated and curr_user == item.user and item.active == True %}
-                <div>
-                <a href="{% url 'close' item.id %}" > <button type="button">Close Listing </button> </a>
+                <div class = "button">
+                    <a href="{% url 'close' item.id %}"> <button type="button">Close Listing </button> </a>
                 </div>
             {% endif %}
         {% else %}
@@ -28,52 +28,83 @@
         {% endif %}
         
         <div>
-            <div>
-                <img src="{{item.image}}" alt="Image of item">
+            <div id="item_image">
+                <img src="{{item.image}}" alt="Image of item" id="list_image">
             </div>
 
             <div>
-                <div>{{ item.desc }} </div>
+                <div id="desc">{{ item.desc }} </div>
                 <div>
-                {% if bid %}
-                    Current Bid: ${{bid.bid}} 
-                {% else %}
-                    Starting Bid: ${{item.start_bid}} 
-                {% endif %}
+                    <span id="current">
+                        {% if bid %}
+                            ${{bid.bid}} 
+                        {% else %}
+                            ${{item.start_bid}} 
+                        {% endif %}
+                    </span>
                 </div>
             </div>
         </div>
 
         {% if user.is_authenticated %}
-        <a href = "{% url 'watchlist' item.id %}"><button type="button">{{watch}}</button></a>
+        <div class="button">
+            <a href = "{% url 'watchlist' item.id %}"><button type="button">{{watch}}</button></a>
+        </div>
+        
 
-        <form action="{% url 'bid' item.id %}" method="POST">
-            {% csrf_token %}
-            {{form}}
-            <input type="submit" value="Place Bid">
-        </form>      
-        {% endif %}
-
-        <h4>Details</h4>
-        <ul>
-            <li> Listed by: {{item.user.username}} </li>
-            <li> Category: {{item.category.category}} </li>
-        </ul>
-
-        {% if user.is_authenticated %}
-        <form action="{% url 'comment' item.id %}" method="POST">
-            {% csrf_token %}
-            {{comment_form}}
-            <input type="submit" value="Post Comment">
-        </form>  
-        {% endif %}
-
-        <h4>Comments</h4>
-        {% for comment in comments %}
+        <div class="sect">
+            
             <div>
-                <p>{{comment.comment}}</p>
+                {% if bid and bid.user == curr_user %}
+                    Your bid is the current bid 
+                {% elif not bid %}
+                    There are currently no bids.
+                {% endif %}
             </div>
-        {% endfor %}
 
+            <form action="{% url 'bid' item.id %}" method="POST">
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" value="Place Bid">
+            </form>   
+        </div>
+        {% endif %}
+        
+        <div class="sect">
+            <h4>Details</h4>
+            <div>
+                <div>Listed by: {{item.user.username}}</div> 
+                <div> Category: {{item.category.category}} </div>
+            </div>
+        </div>
+
+        <div class="sect">
+            {% if user.is_authenticated %}
+            <form action="{% url 'comment' item.id %}" method="POST">
+                {% csrf_token %}
+                {{comment_form}}
+                <input type="submit" value="Post Comment">
+            </form>  
+            {% endif %}
+        </div>
+
+            <h4>Comments</h4>
+            <div id="comment">
+                {% if comments%}
+                    {% for comment in comments %}
+                    <div class="sect">
+                        <div id="user">{{item.user.username}}</div>
+                        <div>
+                            <p>{{comment.comment}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div>
+                        <p> No comments.</p>
+                    </div>
+                {% endif %}
+            </div>
+               
     </div>
 {% endblock %}
