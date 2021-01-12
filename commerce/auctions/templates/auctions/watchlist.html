@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>Watchlist</h2>
+    {% if not watch_items %}
+    <h4>There are currently no items on your watchlist.</h4>
+    {% endif %}
+      
+    {% for watch_item in watch_items %}
+    <div id="list">
+        <div id="image_container">
+            <a href = "{% url 'item' watch_item.item.id %}"><img id="list_image" src="{{watch_item.item.image}}" alt="Image of item"></a>
+        </div>
+
+        <div>
+           <div><h3> <a href = "{% url 'item' watch_item.item.id %}">{{ watch_item.item.name }} </a></h3></div>
+           <div> Price: ${{ watch_item.item.start_bid }} </div>
+            <div>{{ watch_item.item.desc }}</div>
+        </div>
+        
+    </div>
+    {% endfor %}
+
+{% endblock %}

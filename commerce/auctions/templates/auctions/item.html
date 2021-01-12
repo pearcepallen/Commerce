@@ -1,0 +1,111 @@
+{% extends "auctions/layout.html" %}           
+
+{% block title%} {{item.name}} {% endblock %}
+{% block body %}
+    <h2>{{item.name}}</h2>
+
+    {% if messages %}       
+    <div class="messages">
+        {% for message in messages %}
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div id="item">
+
+        {% if item.active == True %}
+            {% if user.is_authenticated and curr_user == item.user and item.active == True %}
+                <div class = "button">
+                    <a href="{% url 'close' item.id %}"> <button type="button">Close Listing </button> </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <h3>Closed</h3>
+            {% if curr_user == bid.user %}
+                <h3>You are the winner!!!!</h3>
+            {% endif %}
+        {% endif %}
+        
+        <div>
+            <div id="item_image">
+                <img src="{{item.image}}" alt="Image of item" id="list_image">
+            </div>
+
+            <div>
+                <div id="desc">{{ item.desc }} </div>
+                <div>
+                    <span id="current">
+                        {% if bid %}
+                            ${{bid.bid}} 
+                        {% else %}
+                            ${{item.start_bid}} 
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="button">
+            <a href = "{% url 'watchlist' item.id %}"><button type="button">{{watch}}</button></a>
+        </div>
+        
+
+        <div class="sect">
+            
+            <div>
+                {% if bid and bid.user == curr_user %}
+                    Your bid is the current bid 
+                {% elif not bid %}
+                    There are currently no bids.
+                {% endif %}
+            </div>
+
+            <form action="{% url 'bid' item.id %}" method="POST">
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" value="Place Bid">
+            </form>   
+        </div>
+        {% endif %}
+        
+        <div class="sect">
+            <h4>Details</h4>
+            <div>
+                <div>Listed by: {{item.user.username}}</div> 
+                <div> Category: {{item.category.category}} </div>
+            </div>
+        </div>
+
+        <div class="sect">
+            {% if user.is_authenticated %}
+            <form action="{% url 'comment' item.id %}" method="POST">
+                {% csrf_token %}
+                {{comment_form}}
+                <input type="submit" value="Post Comment">
+            </form>  
+            {% endif %}
+        </div>
+
+            <h4>Comments</h4>
+            <div id="comment">
+                {% if comments%}
+                    {% for comment in comments %}
+                    <div class="sect">
+                        <div id="user">{{item.user.username}}</div>
+                        <div>
+                            <p>{{comment.comment}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div>
+                        <p> No comments.</p>
+                    </div>
+                {% endif %}
+            </div>
+               
+    </div>
+{% endblock %}
