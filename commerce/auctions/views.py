@@ -175,8 +175,8 @@ def close(request, id):
     item = Listing.objects.get(id=id)
     item.active = False
     item.save()
-    if Bid.objects.filter(item=item).exists():
-        Winner(bid=Bid.objects.filter(item=item).last()).save()
+    #if Bid.objects.filter(item=item).exists():
+        #Winner(bid=Bid.objects.filter(item=item).last()).save()
     return(HttpResponseRedirect(reverse("item", args=[id])))
 
 @login_required(login_url="login")

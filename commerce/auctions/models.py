@@ -41,8 +41,7 @@ class Watchlist(models.Model):
     class Meta:
         unique_together = ["user", "item"]
 
-class Winner(models.Model):
-    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name="winning_bid")
-    def __str__(self):
-        return f"{self.id}: Bid: {self.bid}"
+#class Winner(models.Model):
+#    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name="winning_bid")
+#Potential model to keep track of winners to create a winning bids page/ send email to winners
 
