@@ -12,18 +12,18 @@ class Category(models.Model):
 
 class Listing(models.Model):
     name = models.CharField(max_length = 50)
-    start_bid = models.IntegerField()
+    start_bid = models.DecimalField(max_digits=8, decimal_places=2)
     desc = models.CharField(max_length = 100)
-    image = models.CharField(max_length = 2000)
+    image = models.CharField(max_length = 2000, null=True)
     active = models.BooleanField(default = True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_listing") #user that created listing
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="item_category")
     def __str__(self):
         return f"{self.id}: Name:{self.name}, Bid:{self.start_bid}, Desc:{self.desc}"
 
 class Bid(models.Model):
-    bid = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bid_user")
+    bid = models.DecimalField(max_digits=8, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_bid")
     def __str__(self):
         return f"{self.id}: Bid: {self.bid} | User:{self.user} |Item:{self.item}"
